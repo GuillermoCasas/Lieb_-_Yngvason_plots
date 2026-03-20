@@ -1,0 +1,5 @@
+# Ignore generated outputs
+output/
+__pycache__/
+*.pyc
+.DS_Store

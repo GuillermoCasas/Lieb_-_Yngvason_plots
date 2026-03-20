@@ -12,7 +12,7 @@ plot_cfg = config['plotting']
 fig, ax = plt.subplots(figsize=tuple(plot_cfg['figure']['figsize']))
 
 # Plot the diagonal U1 = U2 (The Isotherms)
-ax.plot([0, 6], [0, 6], linestyle='-', color='black', linewidth=2.5, label='Isotherms ($U_1 = U_2$)')
+ax.plot([0, 6], [0, 6], linestyle='-', color='black', linewidth=2.5, label='Isotherm ($U_1 = U_2$)')
 
 # Define a function to visualize the "forward sector" (reachable states) for an initial non-equilibrium state
 def plot_sector(u2, u1, lambda1=1, lambda2=1, color='blue', label_pt='X', u1_str='U_1', u2_str='U_2', step_size=0.15):
@@ -50,9 +50,6 @@ def plot_sector(u2, u1, lambda1=1, lambda2=1, color='blue', label_pt='X', u1_str
     # 3. Horizontal boundary: represents adiabatic work extraction/insertion limits from system 2
     ax.plot([x_pt, 6], [y_pt, y_pt], color=color, linewidth=2, linestyle='--')
     
-    # Inject a non-visible reference trace to act as the legend handle for the collective boundary
-    ax.plot([], [], color=color, linewidth=2, linestyle='--', label=rf'$\partial A_{{{label_pt}}}$')
-    
     # Fill Set A with vertical lines using step_size
     for x_line in np.arange(x_pt, 6.0, step_size):
         ax.plot([x_line, x_line], [y_pt, 6], color=color, alpha=0.5, linewidth=1.0)
@@ -79,10 +76,13 @@ def plot_sector(u2, u1, lambda1=1, lambda2=1, color='blue', label_pt='X', u1_str
     
     # Plot an intersection node visualizing the final energy position mapped against U_2
     ax.plot(x_bar, 0, 'o', color=color, markersize=6, zorder=6)
-    
+
     # Visually fill the generated convex subspace which constitutes the forward sector (accessible states)
     hull_label = rf'$A_{{{label_pt}}} = \mathrm{{Hull}}({set_a_label} \cup {set_b_label})$'
     ax.fill_between([x_bar, x_pt, 6], [y_bar, y_pt, y_pt], [6, 6, 6], color=color, alpha=0.1, label=hull_label)
+    
+    # Inject a non-visible reference trace to act as the legend handle for the collective boundary
+    ax.plot([], [], color=color, linewidth=2, linestyle='--', label=rf'$\partial A_{{{label_pt}}}$')
     
     return ((x_bar + x_pt) / 2, (y_bar + y_pt) / 2)
 
@@ -151,5 +151,7 @@ ax.annotate('', xy=mid_X, xytext=best_corner, textcoords='data',
             arrowprops=dict(arrowstyle="-", color='black', linestyle=':', alpha=1.0), zorder=4)
 ax.annotate('', xy=mid_Y, xytext=best_corner, textcoords='data',
             arrowprops=dict(arrowstyle="-", color='black', linestyle=':', alpha=1.0), zorder=4)
-plt.savefig(f'forward_sectors_{lambda_1:g}_{lambda_2:g}.png', bbox_inches='tight')
+import os
+os.makedirs('output', exist_ok=True)
+plt.savefig(f'output/forward_sectors_{lambda_1:g}_{lambda_2:g}.png', bbox_inches='tight')
 plt.close()

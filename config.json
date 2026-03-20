@@ -1,7 +1,7 @@
 {
     "physics": {
         "lambda_1": 1.0,
-        "lambda_2": 1.0,
+        "lambda_2": 3.0,
         "state_X": {
             "u1": 1.0,
             "u2": 2.5
@@ -25,7 +25,7 @@
                 0,
                 6
             ],
-            "title_template": "Forward Sectors $A_X$ and $A_Y$ in $\\Gamma^{(2)} \\times \\Gamma^{(1)}$ ($\\lambda_1={lambda_1}$, $\\lambda_2={lambda_2}$)",
+            "title_template": "Forward Sectors $A_X$ and $A_Y$ in $\\Gamma^{(\\lambda_1)} \\times \\Gamma^{(\\lambda_2)}$ (for $\\lambda_1={lambda_1}$, $\\lambda_2={lambda_2}$)",
             "xlabel": "$U_2$",
             "ylabel": "$U_1$"
         },
@@ -44,8 +44,8 @@
                 "u2_str": "U_2'"
             },
             "slope_annotation": {
-                "position_x": 1.0,
-                "position_y": 1.2
+                "position_x": 5.0,
+                "position_y": 3.0
             }
         }
     }
