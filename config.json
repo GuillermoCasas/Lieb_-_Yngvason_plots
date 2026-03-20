@@ -1,0 +1,52 @@
+{
+    "physics": {
+        "lambda_1": 1.0,
+        "lambda_2": 1.0,
+        "state_X": {
+            "u1": 1.0,
+            "u2": 2.5
+        },
+        "state_Y": {
+            "u1": 0.5,
+            "u2": 4.5
+        }
+    },
+    "plotting": {
+        "figure": {
+            "figsize": [
+                8,
+                6
+            ],
+            "xlim": [
+                0,
+                6
+            ],
+            "ylim": [
+                0,
+                6
+            ],
+            "title_template": "Forward Sectors $A_X$ and $A_Y$ in $\\Gamma^{(2)} \\times \\Gamma^{(1)}$ ($\\lambda_1={lambda_1}$, $\\lambda_2={lambda_2}$)",
+            "xlabel": "$U_2$",
+            "ylabel": "$U_1$"
+        },
+        "styling": {
+            "step_size": 0.15,
+            "state_X": {
+                "color": "blue",
+                "label_pt": "X",
+                "u1_str": "U_1",
+                "u2_str": "U_2"
+            },
+            "state_Y": {
+                "color": "red",
+                "label_pt": "Y",
+                "u1_str": "U_1'",
+                "u2_str": "U_2'"
+            },
+            "slope_annotation": {
+                "position_x": 1.0,
+                "position_y": 1.2
+            }
+        }
+    }
+}
