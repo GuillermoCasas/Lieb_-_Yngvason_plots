@@ -23,6 +23,7 @@ letting us validate the ODE integration.
 Author: produced for an Obsidian note on the proof.
 """
 
+import os
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
@@ -318,7 +319,8 @@ ax1.set_ylabel(r"energy  $U$")
 ax1.legend(loc="upper right", fontsize=8.0, framealpha=0.9)
 
 # Save Standalone Plot 1
-fig1.savefig("lemma51_visualization.png", dpi=150, bbox_inches="tight")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+fig1.savefig(os.path.join(script_dir, "lemma51_visualization.png"), dpi=150, bbox_inches="tight")
 plt.close(fig1)
 print("Saved lemma51_visualization.png (standalone adiabats plot).")
 
@@ -341,7 +343,7 @@ ax2.set_title(r"Comparison bounds trap $h(t)$")
 ax2.legend(loc="lower left", fontsize=8.5, framealpha=0.9)
 ax2.set_ylim(bottom=0)
 
-fig2.savefig("lemma51_gap_bounds.png", dpi=150, bbox_inches="tight")
+fig2.savefig(os.path.join(script_dir, "lemma51_gap_bounds.png"), dpi=150, bbox_inches="tight")
 plt.close(fig2)
 print("Saved lemma51_gap_bounds.png (standalone gap bounds plot).")
 
@@ -369,7 +371,7 @@ ax3.set_title("The omitted step: positivity")
 ax3.set_ylim(0, max(Gp1_upper) * 1.08)
 ax3.legend(loc="lower left", fontsize=8.5, framealpha=0.9)
 
-fig3.savefig("lemma51_positivity.png", dpi=150, bbox_inches="tight")
+fig3.savefig(os.path.join(script_dir, "lemma51_positivity.png"), dpi=150, bbox_inches="tight")
 plt.close(fig3)
 print("Saved lemma51_positivity.png (standalone positivity plot).")
 

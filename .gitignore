@@ -1,5 +1,6 @@
 # Ignore generated outputs
 output/
+World_of_thermometers/output/
 __pycache__/
 *.pyc
 .DS_Store

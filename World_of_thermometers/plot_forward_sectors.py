@@ -1,9 +1,12 @@
+import os
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 import json
 
-with open('config.json', 'r') as f:
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(script_dir, 'config.json')
+with open(config_path, 'r') as f:
     config = json.load(f)
 
 phys_cfg = config['physics']
@@ -151,7 +154,7 @@ ax.annotate('', xy=mid_X, xytext=best_corner, textcoords='data',
             arrowprops=dict(arrowstyle="-", color='black', linestyle=':', alpha=1.0), zorder=4)
 ax.annotate('', xy=mid_Y, xytext=best_corner, textcoords='data',
             arrowprops=dict(arrowstyle="-", color='black', linestyle=':', alpha=1.0), zorder=4)
-import os
-os.makedirs('output', exist_ok=True)
-plt.savefig(f'output/forward_sectors_{lambda_1:g}_{lambda_2:g}.png', bbox_inches='tight')
+output_dir = os.path.join(script_dir, 'output')
+os.makedirs(output_dir, exist_ok=True)
+plt.savefig(os.path.join(output_dir, f'forward_sectors_{lambda_1:g}_{lambda_2:g}.png'), bbox_inches='tight')
 plt.close()

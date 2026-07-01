@@ -38,6 +38,7 @@ Panels:
   (4) numerical certificate: the ratio |T(X)-T(Y)| / |X-Y| stays below c(X,r).
 """
 
+import os
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
@@ -246,8 +247,9 @@ fig.text(0.5, 0.485,
          ha="center", va="center", fontsize=11,
          bbox=dict(boxstyle="round,pad=0.4", fc="#fbfbe8", ec="#cdcd80"))
 
-fig.savefig("/home/claude/lemma51_logic.png", dpi=150, bbox_inches="tight")
-print("Saved figure.")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+fig.savefig(os.path.join(script_dir, "lemma51_logic.png"), dpi=150, bbox_inches="tight")
+print("Saved lemma51_logic.png.")
 
 # --------------------------------------------------------------------------
 # Console certificate

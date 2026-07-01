@@ -212,5 +212,5 @@ fig.suptitle(
     "so $G_\\varepsilon+1=h/\\varepsilon>0$, and Gr\u00f6nwall bounds give Lipschitz $T^+$",
     fontsize=12.5, y=1.02)
 
-fig.savefig("scratch/test_lemma51_final_3.png", dpi=150, bbox_inches="tight")
+fig.savefig("Lemma_5-1/test_lemma51_final_3.png", dpi=150, bbox_inches="tight")
 print("Saved test figure final 3.")

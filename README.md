@@ -15,7 +15,7 @@ By reproducing this figure, we enrich the original paper's schematic with mathem
 
 ## Inputs and Configuration
 
-The `plot_forward_sectors.py` script is driven by `config.json`, which defines the thermodynamic parameters, initial conditions, and visual styling:
+The [plot_forward_sectors.py](file:///Users/guillermocasasgonzalez/repos/Lieb_-_Yngvason_plots/World_of_thermometers/plot_forward_sectors.py) script is driven by [config.json](file:///Users/guillermocasasgonzalez/repos/Lieb_-_Yngvason_plots/World_of_thermometers/config.json), which defines the thermodynamic parameters, initial conditions, and visual styling:
 
 ### `physics`
 - `lambda_1`, `lambda_2`: Heat capacities (or sizes) of the two sub-systems. This ratio determines the slope ($-\lambda_2/\lambda_1$) of the equilibration path in the $(U_2, U_1)$ phase space.
@@ -29,7 +29,7 @@ The `plot_forward_sectors.py` script is driven by `config.json`, which defines t
 When you run the script:
 
 ```bash
-python plot_forward_sectors.py
+python World_of_thermometers/plot_forward_sectors.py
 ```
 
-It parses `config.json` and generates a precise phase-space diagram illustrating the forward sectors for the given states. The resulting plot is automatically saved into the `output/` directory (e.g., `output/forward_sectors_1_1.png`).
+It parses `config.json` and generates a precise phase-space diagram illustrating the forward sectors for the given states. The resulting plot is automatically saved into the `World_of_thermometers/output/` directory (e.g., `World_of_thermometers/output/forward_sectors_1_1.png`).
