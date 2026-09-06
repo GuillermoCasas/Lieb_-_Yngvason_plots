@@ -181,15 +181,7 @@ def make_single_proof_plot_accentuated_zoom():
                         bbox=dict(boxstyle="round,pad=0.18", fc="white", ec=C_PTS, lw=0.8, alpha=0.95),
                         zorder=9)
 
-    # Directional arrows for X_j -> X_infinity on main plot (direct path X_j - X_infinity)
-    for j in range(len(seq_X) - 1):
-        ax.annotate("", xy=(seq_X[j+1][0], seq_X[j+1][1]),
-                    xytext=(seq_X[j][0], seq_X[j][1]),
-                    arrowprops=dict(arrowstyle="->", color=C_PTS, ls="--", lw=2.2,
-                                    mutation_scale=13), zorder=6)
-    ax.annotate("", xy=(X0[0], X0[1]), xytext=(seq_X[-1][0], seq_X[-1][1]),
-                arrowprops=dict(arrowstyle="->", color=C_PTS, ls="--", lw=2.2,
-                                mutation_scale=13), zorder=6)
+    # Sequence points X_j are connected along the direct path X_1 -> X_infinity in Section 8
 
     # 6. Intersection points Y_j on l_0 on main plot (uncovered by any line)
     Y1 = seq_Y[0]
@@ -260,16 +252,22 @@ def make_single_proof_plot_accentuated_zoom():
                 bbox=dict(boxstyle="round,pad=0.25", fc="#f5eef8", ec=C_LEG2, lw=1.2, alpha=0.95),
                 zorder=15)
 
-    # Direct vector / displacement X_j - X_infinity indication (for j=1)
-    target_u = 1.890
-    target_v = 1.465
+    # Direct vector / displacement X_1 -> X_infinity (completing the macroscopic triangle)
+    ax.plot([X1[0], X0[0]], [X1[1], X0[1]], color=C_PTS, lw=3.2, ls="-", zorder=5)
+    ax.annotate("", xy=(X0[0] - 0.020, X0[1] + 0.017), xytext=(X1[0] + 0.020, X1[1] - 0.017),
+                arrowprops=dict(arrowstyle="->", color=C_PTS, lw=2.8,
+                                mutation_scale=18), zorder=6)
+
+    # Prominent label for X_j - X_infinity on main plot with curved link (no arrow, zero gap)
+    target_u = 1.895
+    target_v = 1.460
     ax.annotate(r"$\mathbf{X_j - X_\infty}$",
                 xy=(target_u, target_v),
-                xytext=(1.980, 1.470),
+                xytext=(1.995, 1.470),
                 arrowprops=dict(arrowstyle="-", connectionstyle="arc3,rad=-0.18",
                                 color=C_PTS, lw=1.6, shrinkA=0, shrinkB=0),
-                color=C_PTS, fontsize=11.0, fontweight="bold", ha="left", va="center",
-                bbox=dict(boxstyle="round,pad=0.25", fc="#fdf2e9", ec=C_PTS, lw=1.2, alpha=0.95),
+                color=C_PTS, fontsize=11.5, fontweight="bold", ha="left", va="center",
+                bbox=dict(boxstyle="round,pad=0.28", fc="#fdf2e9", ec=C_PTS, lw=1.4, alpha=0.95),
                 zorder=15)
 
     # 9. Transversality Cone on main plot
@@ -287,6 +285,10 @@ def make_single_proof_plot_accentuated_zoom():
     ax.plot(X1[0] + (v_cone - X1[1]) / s_min, v_cone, color=C_CONE, ls="--", lw=1.4, zorder=3)
     ax.plot(X1[0] + (v_cone - X1[1]) / s_max, v_cone, color=C_CONE, ls="-.", lw=1.4, zorder=3)
 
+    # Direct vector entry in legend
+    ax.plot([], [], color=C_PTS, lw=2.5, ls="-",
+            label=r"Direct displacement $X_j - X_\infty$")
+
     # Forbidden zero slope (transversality forbids horizontal tangency dV/dU = 0)
     ax.plot([X1[0] - 0.18, 2.10], [X1[1], X1[1]], color=C_BAD, ls=":", lw=2.2, zorder=4,
             label=r"Forbidden slope $\frac{dV}{dU} = 0$ (not possible to reach)")
@@ -303,22 +305,28 @@ def make_single_proof_plot_accentuated_zoom():
             fontsize=10.5, fontweight="bold", color="#1e8449", zorder=16, va="top")
 
     # Equation with colored terms and comfortable spacing (fs=9.0 to fit with CM math fonts)
-    ax.text(0.042, 0.230, r"$|T(X_j) - T(X_\infty)| \;\leq\;$", transform=ax.transAxes,
+    ax.text(0.042, 0.230, r"$|T(X_j) - T(X_\infty)|$", transform=ax.transAxes,
+            fontsize=9.0, color=C_PTS, zorder=16, va="center")
+    ax.text(0.155, 0.230, r"$\leq$", transform=ax.transAxes,
             fontsize=9.0, color="#2c3e50", zorder=16, va="center")
-    ax.text(0.190, 0.230, r"$|T(X_j) - T(Y_j)|$", transform=ax.transAxes,
+    ax.text(0.182, 0.230, r"$|T(X_j) - T(Y_j)|$", transform=ax.transAxes,
             fontsize=9.0, color=C_LEG1, zorder=16, va="center")
-    ax.text(0.308, 0.230, r"$+$", transform=ax.transAxes,
+    ax.text(0.300, 0.230, r"$+$", transform=ax.transAxes,
             fontsize=9.0, color="#2c3e50", zorder=16, va="center")
-    ax.text(0.332, 0.230, r"$|T(Y_j) - T(X_\infty)|$", transform=ax.transAxes,
+    ax.text(0.324, 0.230, r"$|T(Y_j) - T(X_\infty)|$", transform=ax.transAxes,
             fontsize=9.0, color=C_LEG2, zorder=16, va="center")
 
-    # Underbraces with matching colors
-    add_curly_brace(ax, 0.190, 0.297, 0.216, depth=0.011, color=C_LEG1, lw=1.5, zorder=17, transform=ax.transAxes)
-    ax.text(0.2435, 0.202, r"$\mathbf{Leg\ 1}$", transform=ax.transAxes,
+    # Underbraces with matching colors for all three terms
+    add_curly_brace(ax, 0.042, 0.147, 0.216, depth=0.011, color=C_PTS, lw=1.5, zorder=17, transform=ax.transAxes)
+    ax.text(0.0945, 0.202, r"$\mathbf{X_j - X_\infty}$", transform=ax.transAxes,
+            fontsize=8.2, fontweight="bold", color=C_PTS, zorder=17, ha="center", va="top")
+
+    add_curly_brace(ax, 0.182, 0.289, 0.216, depth=0.011, color=C_LEG1, lw=1.5, zorder=17, transform=ax.transAxes)
+    ax.text(0.2355, 0.202, r"$\mathbf{Leg\ 1}$", transform=ax.transAxes,
             fontsize=8.5, fontweight="bold", color=C_LEG1, zorder=17, ha="center", va="top")
 
-    add_curly_brace(ax, 0.332, 0.445, 0.216, depth=0.011, color=C_LEG2, lw=1.5, zorder=17, transform=ax.transAxes)
-    ax.text(0.3885, 0.202, r"$\mathbf{Leg\ 2}$", transform=ax.transAxes,
+    add_curly_brace(ax, 0.324, 0.437, 0.216, depth=0.011, color=C_LEG2, lw=1.5, zorder=17, transform=ax.transAxes)
+    ax.text(0.3805, 0.202, r"$\mathbf{Leg\ 2}$", transform=ax.transAxes,
             fontsize=8.5, fontweight="bold", color=C_LEG2, zorder=17, ha="center", va="top")
 
     # Subordinate lines with colored Leg tags
@@ -451,7 +459,7 @@ def make_single_proof_plot_accentuated_zoom():
                bbox=dict(boxstyle="round,pad=0.18", fc="white", ec=C_BASE, lw=0.9, alpha=0.95),
                zorder=10)
 
-    # Highlight microscopic two-leg path for step j=4 inside the zoom
+    # Highlight microscopic triangle for step j=4 inside the zoom
     X4 = seq_X[3]
     Y4 = seq_Y[3]
     K4 = adiabat_const(*X4)
@@ -459,6 +467,16 @@ def make_single_proof_plot_accentuated_zoom():
     u_leg1_z = adiabat_U(v_leg1_z, K4)
     axins.plot(u_leg1_z, v_leg1_z, color=C_LEG1, lw=3.2, zorder=5)
     axins.plot([Y4[0], X0[0]], [V0, V0], color=C_LEG2, lw=3.2, zorder=5)
+    # Direct path X_4 -> X_infinity (X_j - X_infinity for j=4)
+    axins.plot([X4[0], X0[0]], [X4[1], X0[1]], color=C_PTS, lw=3.2, zorder=5)
+    axins.annotate("", xy=(X0[0] - 0.003, X0[1] + 0.0025), xytext=(X4[0] + 0.003, X4[1] - 0.0025),
+                   arrowprops=dict(arrowstyle="->", color=C_PTS, lw=2.8,
+                                   mutation_scale=16), zorder=6)
+    # Direct text label in zoom inset
+    axins.text(2.190, 1.228, r"$\mathbf{X_j - X_\infty}$",
+               color=C_PTS, fontsize=9.5, fontweight="bold", ha="center", va="bottom",
+               bbox=dict(boxstyle="round,pad=0.20", fc="#fdf2e9", ec=C_PTS, lw=1.0, alpha=0.95),
+               zorder=15)
 
     # Inset styling
     axins.set_xticks([])
@@ -485,8 +503,8 @@ def make_single_proof_plot_accentuated_zoom():
         fontsize=13.5, pad=48
     )
     ax.legend(
-        loc="lower center", bbox_to_anchor=(0.5, 1.015), ncol=3,
-        fontsize=11.5, frameon=True, framealpha=0.95, handlelength=2.5
+        loc="lower center", bbox_to_anchor=(0.5, 1.015), ncol=4,
+        fontsize=11.0, frameon=True, framealpha=0.95, handlelength=2.5
     )
 
     out_path = os.path.join(script_dir, "theorem52_visualization.png")
