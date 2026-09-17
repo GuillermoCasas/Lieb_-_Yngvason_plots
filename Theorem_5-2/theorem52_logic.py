@@ -5,24 +5,28 @@ Physics Reports 310 (1999) 1-96, p. 71:
     "The temperature T(X) = T^+(X) = T^-(X) is a continuous function on
      the state space, Gamma subset R^{n+1}, of a simple system."
 
+Coordinate Convention:
+  * Horizontal axis (x): Work coordinate V.
+  * Vertical axis (y): Internal energy coordinate U.
+
 The proof is laid out in four interconnected logical beats, matching
 the 2x2 layout of lemma51_logic.png and theorem51_logic.png:
 
   (1) THE GEOMETRIC SETUP.  Base state X_0 and sequence X_j -> X_0 in ball B.
-      Horizontal lines l_j = {(U, V_j)} and base horizontal line l_0 = {(U, V_0)}.
+      Vertical lines l_j = {(V_j, U)} and base vertical line l_0 = {(V_0, U)}.
       Adiabats A_j = dA_{X_j} passing through each X_j.
 
   (2) MANDATORY INTERSECTION.  Axiom S2 provides locally Lipschitz pressure
-      0 < P_min <= P(X) <= P_max < infty.  The slope dV/dU = -1/P is strictly
-      negative and bounded away from 0.  The horizontal direction (dV/dU = 0)
+      0 < P_min <= P(X) <= P_max < infty.  The slope dU/dV = -P is strictly
+      negative and bounded away from -infty.  The vertical direction (dU/dV = -infty, dV = 0)
       is forbidden, forcing every adiabat A_j to cross the gap |V_j - V_0|
-      and intersect l_0 at Y_j -> X_0.
+      and intersect vertical line l_0 at Y_j -> X_0.
 
   (3) THE TWO-LEG BRIDGE.  Decomposes X_j -> X_0 into two controlled legs:
       - Leg 1 (along adiabat A_j): |T(X_j) - T(Y_j)| <= c |X_j - Y_j| -> 0
         by Lemma 5.1 (Lipschitz continuity of T along adiabats).
-      - Leg 2 (along line l_0): |T(Y_j) - T(X_0)| -> 0
-        by Theorem 5.1 (1D continuity of T along horizontal line l_0).
+      - Leg 2 (along vertical line l_0): |T(Y_j) - T(X_0)| -> 0
+        by Theorem 5.1 (1D continuity of T along vertical line l_0).
 
   (4) THE RESOLUTION.  The triangle inequality
           |T(X_j) - T(X_0)| <= |T(X_j) - T(Y_j)| + |T(Y_j) - T(X_0)| -> 0
@@ -59,8 +63,8 @@ C_ADIA_0 = "#2c3e50"   # base adiabat A_0                          (dark slate)
 C_ADIA_J = "#2980b9"   # sequence adiabats A_j                     (blue)
 C_PTS = "#c0392b"      # sequence points X_j                       (crimson)
 C_INTER = "#8e44ad"    # intersection points Y_j on l_0            (purple)
-C_L0 = "#2c3e50"       # base horizontal line l_0                  (dark slate)
-C_LJ = "#7f8c8d"       # horizontal lines l_j                      (grey)
+C_L0 = "#2c3e50"       # base vertical line l_0                    (dark slate)
+C_LJ = "#7f8c8d"       # vertical lines l_j                        (grey)
 C_BALL = "#16a085"     # ball B                                    (teal)
 C_CONE = "#f39c12"     # transversality cone                       (amber)
 C_LEG1 = "#2980b9"     # Leg 1 (along adiabat)                     (blue)
@@ -82,37 +86,37 @@ gs = gridspec.GridSpec(2, 2, hspace=0.34, wspace=0.25)
 # ======================================================================
 ax1 = fig.add_subplot(gs[0, 0])
 V_span = np.linspace(0.85, 1.85, 300)
-K0 = adiabat_const(U0, V0)
+K0 = adiabat_const(*X0)
 
 # Faint background adiabats
 for k_val in np.linspace(K0 - 0.6, K0 + 0.6, 9):
-    ax1.plot(adiabat_U(V_span, k_val), V_span, color="#d5dbdb", lw=0.6, zorder=1)
+    ax1.plot(V_span, adiabat_U(V_span, k_val), color="#d5dbdb", lw=0.6, zorder=1)
 
 # Ball B
 phi = np.linspace(0, 2 * np.pi, 150)
-ax1.fill(U0 + BALL_RADIUS * np.cos(phi), V0 + BALL_RADIUS * np.sin(phi),
+ax1.fill(V0 + BALL_RADIUS * np.cos(phi), U0 + BALL_RADIUS * np.sin(phi),
          color=C_BALL, alpha=0.08, zorder=2)
-ax1.plot(U0 + BALL_RADIUS * np.cos(phi), V0 + BALL_RADIUS * np.sin(phi),
+ax1.plot(V0 + BALL_RADIUS * np.cos(phi), U0 + BALL_RADIUS * np.sin(phi),
          color=C_BALL, ls="--", lw=1.2, zorder=2)
-ax1.text(U0 - 0.36, V0 + 0.38, r"ball $B$ centered at $X_0$",
+ax1.text(V0 + 0.38, U0 + 0.38, r"ball $B$ centered at $X_0$",
          color=C_BALL, fontsize=9.5, fontweight="bold")
 
-# Base line l_0 (label placed cleanly below line on the right)
-ax1.axhline(V0, color=C_L0, lw=2.2, zorder=3)
-ax1.text(2.85, V0 - 0.035, r"$\mathbf{l_0} = \{(U, V_0)\}$",
+# Base line l_0
+ax1.axvline(V0, color=C_L0, lw=2.2, zorder=3)
+ax1.text(V0 - 0.02, 2.85, r"$\mathbf{l_0} = \{(V_0, U)\}$",
          color=C_L0, fontsize=10, ha="right", va="top", fontweight="bold")
 
-# Points X_j and horizontal lines l_j
+# Points X_j and vertical lines l_j
 for j, (Xj, Yj) in enumerate(zip(seq_X, seq_Y), 1):
-    Vj = Xj[1]
+    Vj = Xj[0]
     Kj = adiabat_const(*Xj)
-    ax1.axhline(Vj, color=C_LJ, ls=":", lw=1.0, zorder=3)
-    ax1.plot(adiabat_U(V_span, Kj), V_span, color=C_ADIA_J, lw=1.3, alpha=0.7, zorder=4)
+    ax1.axvline(Vj, color=C_LJ, ls=":", lw=1.0, zorder=3)
+    ax1.plot(V_span, adiabat_U(V_span, Kj), color=C_ADIA_J, lw=1.3, alpha=0.7, zorder=4)
     ax1.plot(Xj[0], Xj[1], "s", color=C_PTS, ms=6, zorder=6)
     ax1.plot(Yj[0], Yj[1], "o", color=C_INTER, ms=6, zorder=6)
     if j in [1, 2]:
-        ax1.text(Xj[0] - 0.03, Xj[1] + 0.02, rf"$X_{j}$", color=C_PTS,
-                 fontsize=9.5, ha="right", va="bottom")
+        ax1.text(Xj[0] + 0.02, Xj[1] - 0.03, rf"$X_{j}$", color=C_PTS,
+                 fontsize=9.5, ha="left", va="top")
 
 # Label Y_1 with arrow
 Y1 = seq_Y[0]
@@ -120,22 +124,22 @@ ax1.annotate(r"$Y_1$", xy=(Y1[0], Y1[1]), xytext=(Y1[0] - 0.08, Y1[1] - 0.08),
              arrowprops=dict(arrowstyle="->", color=C_INTER, lw=1.0),
              color=C_INTER, fontsize=9.5, ha="right", va="top")
 
-# Base point X_0 and base adiabat A_0 (annotated above-right)
-ax1.plot(adiabat_U(V_span, K0), V_span, color=C_ADIA_0, lw=2.2, zorder=4)
+# Base point X_0 and base adiabat A_0
+ax1.plot(V_span, adiabat_U(V_span, K0), color=C_ADIA_0, lw=2.2, zorder=4)
 ax1.plot(X0[0], X0[1], "*", color=C_BASE, ms=12, zorder=7)
-ax1.annotate(r"$\mathbf{X_0}$", xy=(X0[0], X0[1]), xytext=(X0[0] + 0.08, X0[1] + 0.08),
+ax1.annotate(r"$\mathbf{X_0}$", xy=(X0[0], X0[1]), xytext=(X0[0] - 0.08, X0[1] + 0.08),
              arrowprops=dict(arrowstyle="->", color=C_BASE, lw=1.1),
-             color=C_BASE, fontsize=11, fontweight="bold", ha="left", va="bottom")
+             color=C_BASE, fontsize=11, fontweight="bold", ha="right", va="bottom")
 
-ax1.set_xlim(1.50, 2.90)
-ax1.set_ylim(0.90, 1.80)
-ax1.set_xlabel(r"energy  $U$")
-ax1.set_ylabel(r"work coordinate  $V$")
-ax1.set_title(r"(1) Geometric Setup: $X_j \to X_0$ and Horizontal Lines $l_j$")
+ax1.set_xlim(0.85, 1.85)
+ax1.set_ylim(1.40, 2.90)
+ax1.set_xlabel(r"work coordinate  $V$")
+ax1.set_ylabel(r"energy  $U$")
+ax1.set_title(r"(1) Geometric Setup: $X_j \to X_0$ and Vertical Lines $l_j$")
 
 ax1.text(0.04, 0.06,
-         r"$\bullet\ X_j = (U_j, V_j) \in \Gamma$,  $X_j \rightarrow X_0$" "\n"
-         r"$\bullet\ l_j = \{(U, V_j)\}$ are horizontal lines in $(U, V)$" "\n"
+         r"$\bullet\ X_j = (V_j, U_j) \in \Gamma$,  $X_j \rightarrow X_0$" "\n"
+         r"$\bullet\ l_j = \{(V_j, U)\}$ are vertical lines in $(V, U)$" "\n"
          r"$\bullet\ A_j = \partial A_{X_j}$ is the adiabat through $X_j$",
          transform=ax1.transAxes, fontsize=8.8,
          bbox=dict(boxstyle="round,pad=0.35", fc="#fdfefe", ec="#bdc3c7", lw=0.9))
@@ -148,60 +152,60 @@ ax2 = fig.add_subplot(gs[0, 1])
 
 X1, Y1 = seq_X[0], seq_Y[0]
 bounds = get_ball_bounds()
-s_min, s_max = bounds["slope_min"], bounds["slope_max"]
+p_min, p_max = bounds["P_min"], bounds["P_max"]
+s_min, s_max = -p_max, -p_min
 
-# Horizontal lines l_0 and l_1
-ax2.axhline(V0, color=C_L0, lw=2.2, zorder=3)
-ax2.axhline(X1[1], color=C_LJ, ls="--", lw=1.5, zorder=3)
-ax2.text(2.68, V0 - 0.035, r"$l_0: V = V_0$", color=C_L0, fontsize=10, ha="right", va="top", fontweight="bold")
-ax2.text(2.68, X1[1] + 0.02, r"$l_1: V = V_1$", color=C_LJ, fontsize=9.5, ha="right", va="bottom")
+# Vertical lines l_0 and l_1
+ax2.axvline(V0, color=C_L0, lw=2.2, zorder=3)
+ax2.axvline(X1[0], color=C_LJ, ls="--", lw=1.5, zorder=3)
+ax2.text(V0 - 0.02, 2.65, r"$l_0: V = V_0$", color=C_L0, fontsize=10, ha="right", va="top", fontweight="bold")
+ax2.text(X1[0] + 0.02, 2.65, r"$l_1: V = V_1$", color=C_LJ, fontsize=9.5, ha="left", va="top")
 
 # Transversality cone from X_1
 poly_pts = [
     [X1[0], X1[1]],
-    [X1[0] + (V0 - 0.06 - X1[1]) / s_min, V0 - 0.06],
-    [X1[0] + (V0 - 0.06 - X1[1]) / s_max, V0 - 0.06],
+    [V0 - 0.05, X1[1] + s_min * (V0 - 0.05 - X1[0])],
+    [V0 - 0.05, X1[1] + s_max * (V0 - 0.05 - X1[0])],
 ]
 ax2.add_patch(Polygon(poly_pts, color=C_CONE, alpha=0.22, zorder=2, lw=0))
 
-v_cone = np.linspace(V0 - 0.06, X1[1] + 0.06, 100)
-ax2.plot(X1[0] + (v_cone - X1[1]) / s_min, v_cone, color=C_CONE, ls="--", lw=1.4, zorder=3,
-         label=r"slope $-\frac{1}{P_{\min}}$")
-ax2.plot(X1[0] + (v_cone - X1[1]) / s_max, v_cone, color=C_CONE, ls="-.", lw=1.4, zorder=3,
-         label=r"slope $-\frac{1}{P_{\max}}$")
+v_cone = np.linspace(V0 - 0.05, X1[0] + 0.05, 100)
+ax2.plot(v_cone, X1[1] + s_max * (v_cone - X1[0]), color=C_CONE, ls="--", lw=1.4, zorder=3,
+         label=r"slope $-P_{\min}$")
+ax2.plot(v_cone, X1[1] + s_min * (v_cone - X1[0]), color=C_CONE, ls="-.", lw=1.4, zorder=3,
+         label=r"slope $-P_{\max}$")
 
 # True adiabat A_1
 K1 = adiabat_const(*X1)
-ax2.plot(adiabat_U(V_span, K1), V_span, color=C_ADIA_J, lw=2.4, zorder=5, label=r"adiabat $A_1$")
+ax2.plot(V_span, adiabat_U(V_span, K1), color=C_ADIA_J, lw=2.4, zorder=5, label=r"adiabat $A_1$")
 
 # State X_1, intersection Y_1, base X_0
 ax2.plot(X1[0], X1[1], "s", color=C_PTS, ms=8, zorder=6)
-ax2.text(X1[0] - 0.03, X1[1] + 0.03, r"$X_1$", color=C_PTS, fontsize=11, fontweight="bold", ha="right")
+ax2.text(X1[0] + 0.03, X1[1] - 0.03, r"$X_1$", color=C_PTS, fontsize=11, fontweight="bold", ha="left")
 ax2.plot(Y1[0], Y1[1], "o", color=C_INTER, ms=8, zorder=6)
 ax2.annotate(r"$Y_1 = A_1 \cap l_0$", xy=(Y1[0], Y1[1]),
-             xytext=(Y1[0] - 0.12, Y1[1] - 0.09),
+             xytext=(Y1[0] - 0.12, Y1[1] - 0.10),
              arrowprops=dict(arrowstyle="->", color=C_INTER, lw=1.1),
              color=C_INTER, fontsize=10, fontweight="bold", ha="right", va="top")
 ax2.plot(X0[0], X0[1], "*", color=C_BASE, ms=12, zorder=6)
-ax2.annotate(r"$\mathbf{X_0}$", xy=(X0[0], X0[1]), xytext=(X0[0] + 0.08, X0[1] + 0.08),
+ax2.annotate(r"$\mathbf{X_0}$", xy=(X0[0], X0[1]), xytext=(X0[0] - 0.08, X0[1] + 0.08),
              arrowprops=dict(arrowstyle="->", color=C_BASE, lw=1.1),
-             color=C_BASE, fontsize=11, fontweight="bold", ha="left")
+             color=C_BASE, fontsize=11, fontweight="bold", ha="right")
 
-# Forbidden horizontal line
-ax2.plot([X1[0] - 0.25, X1[0] + 0.35], [X1[1], X1[1]], color=C_BAD, ls=":", lw=2.0, zorder=4)
-ax2.text(X1[0] + 0.20, X1[1] - 0.045, r"$\frac{dV}{dU} = 0$ (FORBIDDEN)", color=C_BAD, fontsize=8.5)
+# Forbidden vertical line
+ax2.plot([X1[0], X1[0]], [X1[1] - 0.25, X1[1] + 0.35], color=C_BAD, ls=":", lw=2.0, zorder=4)
+ax2.text(X1[0] + 0.02, X1[1] + 0.20, r"$\frac{dU}{dV} = -\infty$ (FORBIDDEN)", color=C_BAD, fontsize=8.5)
 
-ax2.set_xlim(1.50, 2.70)
-ax2.set_ylim(1.02, 1.70)
-ax2.set_xlabel(r"energy  $U$")
-ax2.set_ylabel(r"work coordinate  $V$")
-ax2.set_title(r"(2) Mandatory Intersection: Bounded Slope $\frac{dV}{dU} = -\frac{1}{P} < 0$")
-ax2.legend(loc="upper left", fontsize=8.4, framealpha=0.9)
+ax2.set_xlim(1.02, 1.70)
+ax2.set_ylim(1.50, 2.70)
+ax2.set_xlabel(r"work coordinate  $V$")
+ax2.set_ylabel(r"energy  $U$")
+ax2.set_title(r"(2) Mandatory Intersection: Bounded Slope $\frac{dU}{dV} = -P < 0$")
+ax2.legend(loc="upper right", fontsize=8.4, framealpha=0.9)
 
-# Placed cleanly in lower-left
 ax2.text(0.04, 0.20,
          r"$\bullet\ 0 < P_{\min} \leq P(X) \leq P_{\max} < \infty$" "\n"
-         r"$\bullet\ \frac{dV}{dU} \in [-\frac{1}{P_{\min}}, -\frac{1}{P_{\max}}] < 0$" "\n"
+         r"$\bullet\ \frac{dU}{dV} \in [-P_{\max}, -P_{\min}] < 0$" "\n"
          r"$\bullet\ A_j$ cannot run parallel to $l_0$" "\n"
          r"$\Rightarrow A_j$ MUST intersect $l_0$ at $Y_j$!" "\n"
          r"$\bullet\ |Y_j - X_0| \leq (1 + P_{\max})|X_j - X_0| \rightarrow 0$",
@@ -214,52 +218,56 @@ ax2.text(0.04, 0.20,
 # ======================================================================
 ax3 = fig.add_subplot(gs[1, 0])
 
-v_p1 = np.linspace(X1[1], Y1[1], 100)
+v_p1 = np.linspace(X1[0], Y1[0], 100)
 u_p1 = adiabat_U(v_p1, K1)
 
-# Leg 1
-ax3.plot(u_p1, v_p1, color=C_LEG1, lw=3.6, zorder=4)
+# Leg 1 (along adiabat from X_1 to Y_1)
+ax3.plot(v_p1, u_p1, color=C_LEG1, lw=3.6, zorder=4)
 mid_i = 50
-ax3.annotate("", xy=(u_p1[mid_i + 8], v_p1[mid_i + 8]),
-             xytext=(u_p1[mid_i - 8], v_p1[mid_i - 8]),
+ax3.annotate("", xy=(v_p1[mid_i + 8], u_p1[mid_i + 8]),
+             xytext=(v_p1[mid_i - 8], u_p1[mid_i - 8]),
              arrowprops=dict(arrowstyle="->", color=C_LEG1, lw=2.4, mutation_scale=15), zorder=5)
 
-# Leg 2
-ax3.annotate("", xy=(X0[0] - 0.015, V0), xytext=(Y1[0] + 0.015, V0),
+# Leg 2 (along vertical line l_0 from Y_1 to X_0)
+ax3.annotate("", xy=(V0, X0[1] - 0.015), xytext=(V0, Y1[1] + 0.015),
              arrowprops=dict(arrowstyle="->", color=C_LEG2, lw=3.0, mutation_scale=16), zorder=5)
 
 # Faint reference lines
-ax3.axhline(V0, color=C_L0, lw=1.2, ls="--", alpha=0.5, zorder=2)
-ax3.axhline(X1[1], color=C_LJ, lw=1.0, ls=":", alpha=0.5, zorder=2)
+ax3.axvline(V0, color=C_L0, lw=1.2, ls="--", alpha=0.5, zorder=2)
+ax3.axvline(X1[0], color=C_LJ, lw=1.0, ls=":", alpha=0.5, zorder=2)
 
 # Points
 ax3.plot(X1[0], X1[1], "s", color=C_PTS, ms=8.5, zorder=6)
 ax3.plot(Y1[0], Y1[1], "o", color=C_INTER, ms=8.5, zorder=6)
 ax3.plot(X0[0], X0[1], "*", color=C_BASE, ms=13, zorder=6)
 
-ax3.text(X1[0], X1[1] + 0.04, r"$X_j = (U_j, V_j)$", color=C_PTS, fontsize=11, fontweight="bold", ha="center")
-ax3.text(Y1[0] - 0.02, Y1[1] - 0.06, r"$Y_j = (U_{Y_j}, V_0)$", color=C_INTER, fontsize=10.5, fontweight="bold", ha="center")
-ax3.text(X0[0] + 0.03, X0[1] + 0.03, r"$X_0 = (U_0, V_0)$", color=C_BASE, fontsize=11, fontweight="bold", ha="left")
+ax3.text(X1[0] + 0.03, X1[1] - 0.04, r"$X_j = (V_j, U_j)$", color=C_PTS, fontsize=11, fontweight="bold", ha="left")
+ax3.text(Y1[0] - 0.03, Y1[1] - 0.04, r"$Y_j = (V_0, U_{Y_j})$", color=C_INTER, fontsize=10.5, fontweight="bold", ha="right")
+ax3.text(X0[0] - 0.03, X0[1] + 0.03, r"$X_0 = (V_0, U_0)$", color=C_BASE, fontsize=11, fontweight="bold", ha="right")
 
 # Callout cards for Leg 1 and Leg 2
-ax3.text(0.5 * (X1[0] + Y1[0]) - 0.18, 0.5 * (X1[1] + Y1[1]) + 0.02,
+ax3.text(0.5 * (X1[0] + Y1[0]) + 0.06, 0.5 * (X1[1] + Y1[1]) + 0.12,
          r"$\mathbf{Leg\ 1\ (along\ A_j)}:$" "\n"
          r"$|T(X_j) - T(Y_j)| \leq c\,|X_j - Y_j|$" "\n"
          r"$\rightarrow 0$  by Lemma 5.1",
-         color=C_LEG1, fontsize=9.2, ha="right", va="center",
+         color=C_LEG1, fontsize=9.2, ha="left", va="center",
          bbox=dict(boxstyle="round,pad=0.35", fc="#ebf5fb", ec=C_LEG1, lw=1.1))
 
-ax3.text(0.5 * (Y1[0] + X0[0]) + 0.12, V0 - 0.14,
-         r"$\mathbf{Leg\ 2\ (along\ l_0)}:$" "\n"
-         r"$|T(Y_j) - T(X_0)| \rightarrow 0$" "\n"
-         r"by Theorem 5.1 (1D continuity)",
-         color=C_LEG2, fontsize=9.2, ha="center", va="top",
-         bbox=dict(boxstyle="round,pad=0.35", fc="#f5eef8", ec=C_LEG2, lw=1.1))
+ax3.annotate(
+    r"$\mathbf{Leg\ 2\ (along\ l_0)}:$" "\n"
+    r"$|T(Y_j) - T(X_0)| \rightarrow 0$" "\n"
+    r"by Theorem 5.1 (1D continuity)",
+    xy=(V0, 0.5 * (Y1[1] + X0[1])),
+    xytext=(1.02, 2.44),
+    arrowprops=dict(arrowstyle="->", color=C_LEG2, lw=1.2, connectionstyle="arc3,rad=-0.15"),
+    color=C_LEG2, fontsize=9.2, ha="left", va="center",
+    bbox=dict(boxstyle="round,pad=0.35", fc="#f5eef8", ec=C_LEG2, lw=1.1)
+)
 
-ax3.set_xlim(1.50, 2.70)
-ax3.set_ylim(1.00, 1.65)
-ax3.set_xlabel(r"energy  $U$")
-ax3.set_ylabel(r"work coordinate  $V$")
+ax3.set_xlim(0.92, 1.66)
+ax3.set_ylim(1.50, 2.70)
+ax3.set_xlabel(r"work coordinate  $V$")
+ax3.set_ylabel(r"energy  $U$")
 ax3.set_title(r"(3) The Two-Leg Path: Connecting $X_j \to Y_j \to X_0$")
 
 

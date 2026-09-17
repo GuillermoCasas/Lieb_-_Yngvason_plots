@@ -49,24 +49,30 @@ Both figures are designed as **abstract theoretical diagrams** without numerical
 
 1. **Separating Surface:**  
    The isotherm $I_{T_0} = \{ Y \in \Gamma : T(Y) = T_0 \}$ partitions $\Gamma$ into two open connected sets:
-   - **Cooler domain:** $\mathcal{X}_- = \{ Y \in \Gamma : T(Y) < T_0 \}$
-   - **Warmer domain:** $\mathcal{X}_+ = \{ Y \in \Gamma : T(Y) > T_0 \}$
+   - **Cooler domain:** $\mathcal{X}_- = \{ Y \in \Gamma : T(Y) < T_0 \}$ (states below $I_{T_0}$)
+   - **Warmer domain:** $\mathcal{X}_+ = \{ Y \in \Gamma : T(Y) > T_0 \}$ (states above $I_{T_0}$)
 
-2. **Straddling Adiabat (Dual Constant-Volume Proof Constructions):**  
-   The existence of states on $\partial A_X$ in both regimes is proved via fixed-volume comparisons (Step 2 of the Lieb & Yngvason proof):
-   - **$X_> \in \partial A_X \cap \mathcal{X}_+$ at fixed volume $V = V_{X_0} \in \rho(A_X)$**:  
-     Since $X_0 \prec X_>$ at constant volume, $U(X_>) > U(X_0) \implies T(X_>) > T(X_0) = T_0$, placing $X_> \in \mathcal{X}_+$.
-   - **$X_< \in \partial A_X \cap \mathcal{X}_-$ at fixed volume $V = V_{X_1} \in \rho(A_X)$**:  
-     Since $X_< \prec X_1$ at constant volume, $U(X_<) < U(X_1) \implies T(X_<) < T(X_1) = T_0$, placing $X_< \in \mathcal{X}_-$.
+2. **Straddling States on $\partial A_X$ (Step 2 Geometric Exhaustion):**  
+   Lieb & Yngvason prove the existence of states on $\partial A_X$ in both regimes via two mutually exhaustive geometric cases:
+   - **Case (a) [$V_{X_0}, V_{X_1} \in \rho(A_X)$ — Constant-Volume Vertical Slices]:**  
+     - **$X_> \in \partial A_X \cap \mathcal{X}_+$ at fixed volume $V = V_{X_0}$:**  
+       Since $X_0 \prec X_>$ along the vertical line $V = V_{X_0}$, we have $U(X_>) > U(X_0) \implies T(X_>) > T(X_0) = T_0$, placing $X_> \in \mathcal{X}_+$.
+     - **$X_< \in \partial A_X \cap \mathcal{X}_-$ at fixed volume $V = V_{X_1}$:**  
+       Since $X_< \prec X_1$ along the vertical line $V = V_{X_1}$, we have $U(X_<) < U(X_1) \implies T(X_<) < T(X_1) = T_0$, placing $X_< \in \mathcal{X}_-$.
+   - **Case (b) [$V_{X_0} \notin \rho(A_X)$ — Topological Separation via Axiom T5]:**  
+     - The entire vertical energy line $\ell = \{ (V_{X_0}, U) \in \Gamma \}$ misses $\partial A_X$ and is trapped in the lower-entropy sector $\{ S < S(X) \}$.
+     - By Axiom T5, there exists a hot state $X'_0 \in \ell$ with $T(X'_0) > T_0$ despite $X'_0 \prec\prec X$.
+     - Similarly, there exists $X'_1$ with $X \prec\prec X'_1$ and $T(X'_1) > T_0$.
+     - Thus $X'_0$ and $X'_1$ belong to the connected open warmer component $\Omega_> \subset \mathcal{X}_+$ and straddle the boundary $\partial A_X$. Because $\partial A_X$ separates the state space, the connected path connecting $X'_0$ to $X'_1$ in $\Omega_>$ must cut $\partial A_X$, producing $X_\uparrow \in \partial A_X \cap \Omega_> \subset \mathcal{X}_+$.
 
 3. **Mandatory Cut (Intermediate Value Theorem):**  
-   Since $T$ is continuous and $\partial A_X$ is connected (Axiom S4), $T$ must attain the value $T_0$ somewhere along $\partial A_X$. This guarantees an intersection state:
+   Since $T$ is continuous (Theorem 5.2) and $\partial A_X$ is connected (Axiom S3), $T$ must attain the value $T_0$ somewhere along $\partial A_X$. This guarantees an intersection state:
    $$X' = \partial A_X \cap I_{T_0} \implies X' \overset{A}{\sim} X \quad \text{and} \quad T(X') = T_0.$$
 
 4. **Transversal Slopes:**  
-   In $(U, V)$ coordinates:
-   $$\left.\frac{dV}{dU}\right|_T > 0 > \left.\frac{dV}{dU}\right|_S$$
-   The tangent slopes have strictly opposite signs, ensuring a clean, transversal intersection.
+   In $(V, U)$ coordinates (where $V$ is on the horizontal axis and $U$ is on the vertical axis):
+   $$\left.\frac{dU}{dV}\right|_T = \frac{a}{V^2} > 0 > -P = \left.\frac{dU}{dV}\right|_S$$
+   The isotherm has positive slope (curves upward), whereas adiabats have strictly negative slope (curve downward). The tangent slopes have strictly opposite signs, ensuring a clean, transversal intersection.
 
 ---
 

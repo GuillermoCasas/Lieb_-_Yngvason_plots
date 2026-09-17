@@ -11,28 +11,28 @@ Theorem 5.2 (Continuity of temperature).
 
 Proof mechanism:
 Let X_0, X_1, X_2, ... in Gamma such that X_j -> X_0 as j -> infty.
-Write X_j = (U_j, V_j), let A_j denote the adiabat dA_{X_j}, and set
-l_j = { (U, V_j) : (U, V_j) in Gamma }.
+Write X_j = (V_j, U_j), let A_j denote the adiabat dA_{X_j}, and set
+l_j = { (V_j, U) : (V_j, U) in Gamma }.
 
-In coordinates (U, V) where internal energy U is the horizontal axis
-and work coordinate V is the vertical axis:
-  * l_j is the HORIZONTAL LINE V = V_j passing through X_j.
-  * l_0 is the base HORIZONTAL LINE V = V_0 passing through X_0.
-  * Each adiabat A_j satisfies dU = -P(U, V) dV, or dV/dU = -1/P(U, V).
+In coordinates (V, U) where work coordinate V is the horizontal axis
+and internal energy U is the vertical axis:
+  * l_j is the VERTICAL LINE V = V_j passing through X_j.
+  * l_0 is the base VERTICAL LINE V = V_0 passing through X_0.
+  * Each adiabat A_j satisfies dU = -P(V, U) dV, or dU/dV = -P(V, U).
   * Since pressure P(X) is locally Lipschitz continuous and bounded
     (0 < P_min <= P <= P_max < infty) on a small ball B centered at X_0,
-    the slope dV/dU is bounded away from 0:
-        -1/P_min <= dV/dU <= -1/P_max < 0.
-    In particular, the adiabat cannot be horizontal (dV/dU != 0).
-    Therefore, each adiabat A_j MUST intersect the horizontal line l_0
-    at some point Y_j = (U(Y_j), V_0).
+    the slope dU/dV is strictly negative and bounded:
+        -P_max <= dU/dV <= -P_min < 0.
+    In particular, the adiabat cannot be vertical (dU/dV != -infty, dV != 0).
+    Therefore, each adiabat A_j MUST intersect the vertical line l_0
+    at some point Y_j = (V_0, U(Y_j)).
   * As j -> infty, |X_j - X_0| -> 0 forces Y_j -> X_0 along l_0.
   * The temperature difference decomposes via the triangle inequality:
         |T(X_j) - T(X_0)| <= |T(X_j) - T(Y_j)| + |T(Y_j) - T(X_0)|.
     - Leg 1: |T(X_j) - T(Y_j)| <= c |X_j - Y_j| -> 0
       by Lemma 5.1 (T is locally Lipschitz along each adiabat A_j).
     - Leg 2: |T(Y_j) - T(X_0)| -> 0
-      by Theorem 5.1 (T is continuous and monotone along the line l_0).
+      by Theorem 5.1 (T is continuous and monotone along the vertical line l_0).
     Hence T(X_j) -> T(X_0), proving continuity on Gamma.
 """
 
@@ -45,42 +45,42 @@ A_PARAM = 0.50          # molecular attraction parameter (A/V potential energy)
 GAMMA_PARAM = 1.40      # adiabatic index
 BALL_RADIUS = 0.55      # radius of the local neighborhood ball B centered at X_0
 
-# Base state X_0 = (U_0, V_0)
-U0 = 2.20
+# Base state X_0 = (V_0, U_0) in (V, U) coordinate convention
 V0 = 1.20
-X0 = np.array([U0, V0])
+U0 = 2.20
+X0 = np.array([V0, U0])
 
 
 # --------------------------------------------------------------------------
 # Thermodynamic State Functions
 # --------------------------------------------------------------------------
-def entropy(U, V):
+def entropy(V, U):
     """
-    Entropy S(U, V) = ln(U - A/V) + (gamma - 1) ln(V).
-    Concave on Gamma = { (U, V) : U > A/V, V > 0 }.
+    Entropy S(V, U) = ln(U - A/V) + (gamma - 1) ln(V).
+    Concave on Gamma = { (V, U) : U > A/V, V > 0 }.
     """
     return np.log(U - A_PARAM / V) + (GAMMA_PARAM - 1.0) * np.log(V)
 
 
-def temperature(U, V):
+def temperature(V, U):
     """
-    Temperature T(U, V) = (dS/dU)^{-1} = U - A/V.
+    Temperature T(V, U) = (dS/dU)^{-1} = U - A/V.
     Single-valued and strictly positive everywhere on Gamma (Theorem 5.1).
-    Along any line l_j (constant V_j), T is linear and strictly increasing in U.
+    Along any vertical line l_j (constant V_j), T is linear and strictly increasing in U.
     """
     return U - A_PARAM / V
 
 
-def pressure(U, V):
+def pressure(V, U):
     """
-    Pressure P(U, V) = T * (dS/dV) = A/V^2 + (gamma - 1) * T(U, V) / V.
+    Pressure P(V, U) = T * (dS/dV) = A/V^2 + (gamma - 1) * T(V, U) / V.
     Smooth (locally Lipschitz) and strictly positive on Gamma.
     """
-    t = temperature(U, V)
+    t = temperature(V, U)
     return A_PARAM / (V ** 2) + (GAMMA_PARAM - 1.0) * t / V
 
 
-def adiabat_const(U, V):
+def adiabat_const(V, U):
     """
     Adiabatic invariant K = exp(S) = (U - A/V) * V^(gamma - 1) = T * V^(gamma - 1).
     Level sets S = const are level sets K = const.
@@ -96,30 +96,30 @@ def adiabat_U(V, K):
     return A_PARAM / V + K * (V ** (-(GAMMA_PARAM - 1.0)))
 
 
-def adiabat_slope_dV_dU(U, V):
+def adiabat_slope_dU_dV(V, U):
     """
-    Slope of the adiabat in the (U, V) plane:
-    dV/dU = -1 / P(U, V) < 0.
+    Slope of the adiabat in the (V, U) plane:
+    dU/dV = -P(V, U) < 0.
     """
-    p = pressure(U, V)
-    return -1.0 / p
+    p = pressure(V, U)
+    return -float(p)
 
 
 # --------------------------------------------------------------------------
-# Intersections with the Horizontal Line l_0: V = V_0
+# Intersections with the Vertical Line l_0: V = V_0
 # --------------------------------------------------------------------------
 def intersect_adiabat_with_l0(X_j):
     """
-    Given a state X_j = (U_j, V_j), find the intersection point Y_j = (U_Yj, V_0)
-    of the adiabat A_j passing through X_j with the horizontal line l_0: V = V_0.
+    Given a state X_j = (V_j, U_j), find the intersection point Y_j = (V_0, U_Yj)
+    of the adiabat A_j passing through X_j with the vertical line l_0: V = V_0.
 
     Since S is constant along A_j:
-      K_j = adiabat_const(U_j, V_j)
-      U(Y_j) = adiabat_U(V_0, K_j) = A/V_0 + K_j * V_0^{-(gamma - 1)}.
+      K_j = adiabat_const(X_j[0], X_j[1])
+      U(Y_j) = adiabat_U(V0, K_j) = A/V_0 + K_j * V_0^{-(gamma - 1)}.
     """
     K_j = adiabat_const(X_j[0], X_j[1])
-    U_Yj = adiabat_U(V0, K_j)
-    return np.array([U_Yj, V0])
+    U_Yj = float(adiabat_U(V0, K_j))
+    return np.array([V0, U_Yj])
 
 
 # --------------------------------------------------------------------------
@@ -128,20 +128,19 @@ def intersect_adiabat_with_l0(X_j):
 def generate_sequence(n_points=4):
     """
     Generate a clean sequence of points X_1, X_2, ..., X_n converging to X_0.
-    Each X_j = (U_j, V_j) has V_j > V_0, so l_j: V = V_j is a horizontal line above l_0.
+    Each X_j = (V_j, U_j) has V_j > V_0, so l_j: V = V_j is a vertical line to the right of l_0.
+    Offsets are given as (Delta V, Delta U).
     """
-    # Well-spaced geometric convergence for clear visual annotation
     offsets = [
-        (-0.35, 0.30),    # j=1: outer state
-        (-0.18, 0.15),    # j=2: intermediate
-        (-0.09, 0.075),   # j=3: closer
-        (-0.04, 0.033),   # j=4: very close
+        (0.30, -0.35),    # j=1: outer state
+        (0.15, -0.18),    # j=2: intermediate
+        (0.075, -0.09),   # j=3: closer
+        (0.033, -0.04),   # j=4: very close
     ]
     if n_points > len(offsets):
-        # generate further points if requested
         for j in range(len(offsets), n_points):
             factor = 0.5 ** (j - len(offsets) + 1)
-            offsets.append((-0.04 * factor, 0.033 * factor))
+            offsets.append((0.033 * factor, -0.04 * factor))
 
     points = [X0 + np.array(off) for off in offsets[:n_points]]
     return points
@@ -152,8 +151,8 @@ def generate_sequence(n_points=4):
 # --------------------------------------------------------------------------
 def get_ball_bounds(radius=BALL_RADIUS):
     """
-    Compute extremal values of P(U, V) and slope dV/dU on the ball B(X_0, r).
-    Guarantees transversality and existence of intersection with l_0.
+    Compute extremal values of P(V, U) and slope dU/dV on the ball B(X_0, r).
+    Guarantees transversality and existence of intersection with vertical line l_0.
     """
     thetas = np.linspace(0, 2 * np.pi, 200)
     rs = np.linspace(0, radius, 20)
@@ -162,15 +161,15 @@ def get_ball_bounds(radius=BALL_RADIUS):
 
     for r in rs:
         for th in thetas:
-            u = U0 + r * np.cos(th)
-            v = V0 + r * np.sin(th)
+            v = V0 + r * np.cos(th)
+            u = U0 + r * np.sin(th)
             if v > 0 and u > A_PARAM / v:
-                p = pressure(u, v)
+                p = pressure(v, u)
                 P_vals.append(p)
-                slope_vals.append(-1.0 / p)
+                slope_vals.append(-p)
 
-    P_min, P_max = np.min(P_vals), np.max(P_vals)
-    slope_min, slope_max = np.min(slope_vals), np.max(slope_vals)
+    P_min, P_max = float(np.min(P_vals)), float(np.max(P_vals))
+    slope_min, slope_max = float(np.min(slope_vals)), float(np.max(slope_vals))
     return {
         "P_min": P_min, "P_max": P_max,
         "slope_min": slope_min, "slope_max": slope_max,
@@ -181,17 +180,17 @@ if __name__ == "__main__":
     print("=" * 70)
     print("Thermodynamic Model for Theorem 5.2 (Continuity of Temperature)")
     print("=" * 70)
-    print(f"Base State X_0 = (U_0={U0:.2f}, V_0={V0:.2f})")
-    print(f"Temperature T(X_0) = {temperature(U0, V0):.4f}")
-    print(f"Pressure P(X_0)    = {pressure(U0, V0):.4f}")
-    print(f"Adiabat slope dV/dU at X_0 = {adiabat_slope_dV_dU(U0, V0):.4f}")
+    print(f"Base State X_0 = (V_0={V0:.2f}, U_0={U0:.2f})")
+    print(f"Temperature T(X_0) = {temperature(V0, U0):.4f}")
+    print(f"Pressure P(X_0)    = {pressure(V0, U0):.4f}")
+    print(f"Adiabat slope dU/dV at X_0 = {adiabat_slope_dU_dV(V0, U0):.4f}")
 
     bounds = get_ball_bounds()
     print("\nBounds inside Ball B(X_0, r):")
     print(f"  P_min = {bounds['P_min']:.4f},  P_max = {bounds['P_max']:.4f}")
-    print(f"  Adiabat slope dV/dU in [{bounds['slope_min']:.4f}, {bounds['slope_max']:.4f}] < 0")
-    print("  -> Slope is strictly negative and bounded away from 0 (never horizontal).")
-    print("  -> Transversality forces every adiabat A_j to intersect l_0!")
+    print(f"  Adiabat slope dU/dV in [{bounds['slope_min']:.4f}, {bounds['slope_max']:.4f}] < 0")
+    print("  -> Slope is strictly negative and finite (never vertical dU/dV = -infty).")
+    print("  -> Transversality forces every adiabat A_j to intersect vertical line l_0!")
 
     print("\nSequence X_j -> X_0 and Triangle Inequality Decomposition:")
     seq = generate_sequence(4)
